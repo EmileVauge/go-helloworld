@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker build -t emilevauge/go-helloworld .
+
+test:
+  override:
+    - docker run -d -p 9999:9999 emilevauge/go-helloworld; sleep 5
+    - curl --retry 10 --retry-delay 5 -v http://localhost:9200
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push emilevauge/go-helloworld
