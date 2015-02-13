@@ -10,7 +10,7 @@ dependencies:
 test:
   override:
     - docker run -d -p 9999:9999 emilevauge/go-helloworld; sleep 5
-    - curl --retry 10 --retry-delay 5 -v http://localhost:9200
+    - curl --retry 10 --retry-delay 5 -v http://localhost:9999
 
 deployment:
   hub:
