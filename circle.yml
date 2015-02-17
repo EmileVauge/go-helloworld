@@ -12,7 +12,7 @@ dependencies:
     - gcloud components update preview
     - echo $GCLOUD_KEY > gcloud.json
     - gcloud auth activate-service-account 71141810072-fpsbm69uifcpuisd067j1vvdg2meuioe.apps.googleusercontent.com --key-file gcloud.json
-    - glcoud preview --help
+    - glcoud --help
     - echo $REPO
     - docker build -t ${REPO,,} .
 
