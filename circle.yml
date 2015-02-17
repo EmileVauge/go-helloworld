@@ -3,11 +3,12 @@ machine:
     - docker
   environment:
     REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+    CLOUDSDK_CORE_DISABLE_PROMPTS: 1
 
 dependencies:
   override:
     - curl -sSL https://sdk.cloud.google.com | bash
-    - gcloud auth login
+    - google-cloud-sdk/gcloud auth login
     - docker info
     - echo $REPO
     - docker build -t ${REPO,,} .
