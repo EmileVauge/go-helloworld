@@ -2,17 +2,18 @@ machine:
   services:
     - docker
   environment:
-    REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+    REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+    REPO: ${REPO,,}
 
 dependencies:
   override:
     - docker info
     - echo $REPO
-    - docker build -t go-helloworld .
+    - docker build -t $REPO .
 
 test:
   override:
-    - docker run -d -p 9999:9999 go-helloworld; sleep 5
+    - docker run -d -p 9999:9999 $REPO; sleep 5
     - curl --retry 10 --retry-delay 5 -v http://localhost:9999
 
 deployment:
@@ -20,4 +21,6 @@ deployment:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push $REPO
+      - docker push $REPO:latest
+      - docker tag $REPO:latest $REPO:$CIRCLE_SHA1
+      - docker push $REPO:$CIRCLE_SHA1
