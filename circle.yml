@@ -6,6 +6,8 @@ machine:
 
 dependencies:
   override:
+    - curl -sSL https://sdk.cloud.google.com | bash
+    - gcloud auth login
     - docker info
     - echo $REPO
     - docker build -t ${REPO,,} .
