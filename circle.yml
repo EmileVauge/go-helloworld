@@ -8,7 +8,7 @@ dependencies:
   override:
     - docker info
     - echo $REPO
-    - docker build -t go-helloworld.
+    - docker build -t go-helloworld .
 
 test:
   override:
