@@ -1,16 +1,18 @@
 machine:
   services:
     - docker
+  environment:
+    REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
 
 dependencies:
   override:
     - docker info
-    - echo $CIRCLE_PROJECT_USERNAME-$CIRCLE_PROJECT_REPONAME-$CIRCLE_SHA1
-    - docker build -t "$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1}" .
+    - echo $REPO
+    - docker build -t $REPO .
 
 test:
   override:
-    - docker run -d -p 9999:9999 "$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1}"; sleep 5
+    - docker run -d -p 9999:9999 $REPO; sleep 5
     - curl --retry 10 --retry-delay 5 -v http://localhost:9999
 
 deployment:
@@ -18,4 +20,4 @@ deployment:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push "$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:${CIRCLE_SHA1}"
+      - docker push $REPO
