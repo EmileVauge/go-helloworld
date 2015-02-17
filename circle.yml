@@ -8,11 +8,11 @@ dependencies:
   override:
     - docker info
     - echo $REPO
-    - docker build -t $REPO .
+    - docker build -t go-helloworld.
 
 test:
   override:
-    - docker run -d -p 9999:9999 $REPO; sleep 5
+    - docker run -d -p 9999:9999 go-helloworld; sleep 5
     - curl --retry 10 --retry-delay 5 -v http://localhost:9999
 
 deployment:
