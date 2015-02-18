@@ -32,5 +32,5 @@ deployment:
       - gcloud config set project $GCLOUD_PROJECT
       - gcloud config set compute/zone $GCLOUD_ZONE
       - gcloud config set container/cluster $GCLOUD_CLUSTER
-      - gcloud preview container pods create --name $CIRCLE_PROJECT_REPONAME --image=${REPO,,}:$CIRCLE_SHA1 --port=9999
+      - gcloud --verbosity=debug preview container pods create --name $CIRCLE_PROJECT_REPONAME --image=${REPO,,}:$CIRCLE_SHA1 --port=9999
       - gcloud compute firewall-rules create $GCLOUD_CLUSTER-node-9999 --allow tcp:9999 --target-tags k8s-$GCLOUD_CLUSTER-node
