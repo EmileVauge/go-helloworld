@@ -1,6 +1,8 @@
 machine:
   services:
     - docker
+  environment:
+    REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
 dependencies:
   override:
