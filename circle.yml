@@ -1,18 +1,9 @@
 machine:
   services:
     - docker
-  environment:
-    REPO: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-    CLOUDSDK_CORE_DISABLE_PROMPTS: 1
-    CLOUDSDK_PYTHON_SITEPACKAGES: 1
 
 dependencies:
   override:
-    - curl -sSL https://sdk.cloud.google.com | bash
-    - gcloud components update preview
-    - echo $GCLOUD_KEY > gcloud.json
-    - echo $GCLOUD_SSH_KEY | base64 --decode > ~/.ssh/google_compute_engine
-    - gcloud auth activate-service-account 71141810072-fpsbm69uifcpuisd067j1vvdg2meuioe.apps.googleusercontent.com --key-file gcloud.json
     - echo $REPO
     - docker build -t ${REPO,,} .
 
@@ -29,8 +20,4 @@ deployment:
       - docker push ${REPO,,}:latest
       - docker tag ${REPO,,}:latest ${REPO,,}:$CIRCLE_SHA1
       - docker push ${REPO,,}:$CIRCLE_SHA1
-      - gcloud config set project $GCLOUD_PROJECT
-      - gcloud config set compute/zone $GCLOUD_ZONE
-      - gcloud config set container/cluster $GCLOUD_CLUSTER
-      - gcloud --verbosity=debug preview container pods create --name $CIRCLE_PROJECT_REPONAME --image=${REPO,,}:$CIRCLE_SHA1 --port=9999
-      - gcloud compute firewall-rules create $GCLOUD_CLUSTER-node-9999 --allow tcp:9999 --target-tags k8s-$GCLOUD_CLUSTER-node
+      - ssh ubuntu@HOST_DEPLOY "docker -H tcp://localhost:5000 run -d -p 9999:9999 ${REPO,,}"
